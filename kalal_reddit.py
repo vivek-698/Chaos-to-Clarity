@@ -9,11 +9,10 @@ r = praw.Reddit(
     password="test@123",
 )
 
-submissions = r.subreddit("elonmusk").hot(limit=1000)
+# fetches the top 1000 posts from the subreddit
+top1k_posts = r.subreddit("elonmusk").hot(limit=1000)
 
 attributes = [
-    "selftext",
-    "saved",
     "title",
     "name",
     "score",
@@ -22,12 +21,32 @@ attributes = [
     "visited",
     "id",
     "author",
-    "num_comments",
+    "ups",
+    "downs",
+    "created_utc",
 ]
+
+comment_attributes = ["body", "ups", "downs", "created_utc"]
 # ['selftext', 'saved',  'title', 'name', 'score','likes', 'view_count','visited', 'id', 'author', 'num_comments']
-with open("submissions.csv", "w", newline="", encoding="utf-8") as file:
-    writer = csv.writer(file)
-    writer.writerow(attributes)
-    for i in submissions:
-        values = [getattr(i, attr) for attr in attributes]
-        writer.writerow(values)
+with open("headings.csv", "w", newline="", encoding="utf-8") as headings_file, open(
+    "comments.csv", "w", newline="", encoding="utf-8"
+) as comments_file:
+    writer1 = csv.writer(headings_file)
+    writer1.writerow(attributes)
+
+    writer2 = csv.writer(comments_file)
+    writer2.writerow(comment_attributes)
+    for post in top1k_posts:
+        values = [getattr(post, attr) for attr in attributes]
+        writer1.writerow(values)
+
+        post.comments.replace_more(limit=50)
+        print(
+            "Fetching ",
+            min(50, len(post.comments.list())),
+            " comments for post titled",
+            post.title,
+        )
+        for comment in post.comments.list():
+            values = [getattr(comment, attr) for attr in comment_attributes]
+            writer2.writerow(values)
