@@ -18,7 +18,7 @@ class Analytics:
 
     def mentionsOverTime(self, start_date="2023-01-18", end_date="2023-07-20", weekly=False):
         combined_df = pd.concat([self.headings, self.comments])
-
+        
         combined_df['date'] = pd.to_datetime(combined_df['date'], format="%d %B %Y, %I:%M:%S %p %Z")
 
         # Filter the data based on the start and end dates
@@ -151,7 +151,6 @@ class Analytics:
 
 
 A = Analytics("Elon Musk")
-# A.generateSentiment()
 # A.mentionsOverTime(start_date="2023-05-01", end_date="2023-08-01") 
 df = pd.read_csv("./data/headings-with-sentiment.csv")
 df2 = pd.read_csv("./data/comments-with-sentiment.csv")

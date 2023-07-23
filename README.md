@@ -1,26 +1,4 @@
 ## File structure
-CHAOS-TO-CLARITY/ 
-├─ data/ 
-│  ├─ comments-old.csv 
-│  ├─ comments-with-sentiment.csv 
-│  ├─ comments.csv 
-│  ├─ headings-old.csv 
-│  ├─ headings-with-sentiment.csv 
-│  ├─ headings.csv 
-├─ scripts/ 
-│  ├─ generate_analytics.py --------------> MAIN FILE 
-│  ├─ huggingface-offline.py 
-│  ├─ kalal_reddit.py 
-│  ├─ sentiment analysis.py --------------> waste 
-│  ├─ tweets.py --------------------------> waste 
-│  ├─ utils.py 
-│  ├─ word_cloud.py ----------------------> need to fix 
-├─ .gitignore 
-├─ index.html 
-├─ styles.css 
-├─ Initial_research.docx 
-├─ README.md 
-
 
 ## Workflow
 
