@@ -108,7 +108,7 @@ class Analytics:
 
 
 
-    def drawPieChart(self,data):
+    def draw3PieChart(self,data):
         sentiment_counts = data.value_counts()
         # print(sentiment_counts)
         colors = [ '#FFAE42', '#ED2939','#3BB143'] # neutral, negative, positive
@@ -119,6 +119,18 @@ class Analytics:
         ax.set_title('Sentiment Distribution')
         # Equal aspect ratio ensures that pie is drawn as a circle
         ax.axis('equal')
+        plt.show()
+
+    def draw5PieChart(self,data):
+        sentiment_counts = data.value_counts()[:-1] # we cut off the last Neutral part as that was generated due to exception while running the sentiment analysis
+        # need to specify sepcific color for specific emotion
+        colors = ['#ED2939' , '#FF9B9B','#567B89', "#311212",  "#FF819F","#00e8be"] # anger, joy, saddness, suprise, love, fear
+        fig,ax = plt.subplots()
+        wedges,texts,autotexts = ax.pie(sentiment_counts, colors=colors, autopct=lambda p: f'{p:.1f}%' if p >= 3 else '', startangle=90)
+        ax.set_title('Comment Sentiment Distribution')
+        ax.axis('equal')
+        plt.legend(wedges, sentiment_counts.index, title="Sentiments", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+        plt.tight_layout()
         plt.show()
 
 
@@ -142,6 +154,8 @@ A = Analytics("Elon Musk")
 # A.generateSentiment()
 # A.mentionsOverTime(start_date="2023-05-01", end_date="2023-08-01") 
 df = pd.read_csv("./data/headings-with-sentiment.csv")
+df2 = pd.read_csv("./data/comments-with-sentiment.csv")
 # A.mentionsOverTime()
-# A.drawPieChart(df["Sentiment"])
+# A.draw3PieChart(df["Sentiment"])
+A.draw5PieChart(df2["Sentiment"])
 # A.wordCloud()

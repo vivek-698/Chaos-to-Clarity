@@ -18,7 +18,7 @@ Analytics being offered:
 User will also be given an option to filter out the analyitcal data based on the social media (Reddit, Instagram, Youtube, Twiiter, Facebook etc.)
 
 ## Working
-kalal_reddit.py contains the reddit api call, it sends the output to 2 csv files located in the data directory (comments,headings)
+kalal_reddit.py contains the reddit api call, it sends the output to 2 csv files located in the data directory (comments,headings) 
 huggingface-offline.py was used to generate sentiment for headings. "headings-with-sentiment.csv"
 
 
