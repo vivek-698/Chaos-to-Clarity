@@ -1,9 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import requests
 from wordcloud import WordCloud
 from wordcloud import STOPWORDS
+from transformers import pipeline
+
 
 
 class Analytics:
@@ -13,7 +14,6 @@ class Analytics:
         print(f"..Fetching analytics for {name}")
         self.headings = pd.read_csv("./data/headings.csv")
         self.comments = pd.read_csv("./data/comments.csv")
-        # print(self.headings.isnull().sum())
         # Run some preinitiazing of the data to make it in the correct format for later analysis
 
     def mentionsOverTime(self, start_date="2023-01-18", end_date="2023-07-20", weekly=False):
@@ -59,29 +59,53 @@ class Analytics:
 
 
     # Read from the self.headings and self.comments and generate sentiment and append it to the datafram NOT the csv
-    def generateSentiment(self):
-        MODEL = "cardiffnlp/twitter-roberta-base-sentiment-latest"
-        HF_TOKEN = "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"
-        API_URL = "https://api-inference.huggingface.co/models/" + MODEL
-        headers = {"Authorization": "Bearer %s" % (HF_TOKEN)}
+    # def generateSentiment(self):
+    #     MODEL = "cardiffnlp/twitter-roberta-base-sentiment-latest"
+    #     HF_TOKEN = "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"
+    #     API_URL = "https://api-inference.huggingface.co/models/" + MODEL
+    #     headers = {"Authorization": "Bearer %s" % (HF_TOKEN)}
 
 
-        def analyze_sentiment(data):
-            payload = dict(inputs=data, options=dict(wait_for_model=True))
-            response = requests.post(API_URL, headers=headers, json=payload)
+    #     def analyze_sentiment(data):
+    #         payload = dict(inputs=data, options=dict(wait_for_model=True))
+    #         response = requests.post(API_URL, headers=headers, json=payload)
             
-            sentiment_result = response.json()[0]
-            top_sentiment = max(sentiment_result, key=lambda x: x["score"])
-            print(top_sentiment["label"])
-            return top_sentiment["label"]
+    #         sentiment_result = response.json()[0]
+    #         top_sentiment = max(sentiment_result, key=lambda x: x["score"])
+    #         print(top_sentiment["label"])
+    #         return top_sentiment["label"]
         
-        print("Started sentiment analysis for headings...")
-        self.headings["sentiment"] = self.headings["title"].apply(analyze_sentiment)
-        print("...Finished Sentiment analysis")
+    #     print("Started sentiment analysis for headings...")
+    #     self.headings["sentiment"] = self.headings["title"].apply(analyze_sentiment)
+    #     print("...Finished Sentiment analysis")
 
-        # Just in case it gets rate limited in the future let me save this to another file
-        self.headings.to_csv("headings-with-sentiment", index=False, encoding="utf-8")
-        print("Saved to local file just in case")
+    #     # Just in case it gets rate limited in the future let me save this to another file
+    #     self.headings.to_csv("headings-with-sentiment", index=False, encoding="utf-8")
+    #     print("Saved to local file just in case")
+
+
+    def commentSentiment(self):
+        # download classifier
+        classifier = pipeline(model="bhadresh-savani/distilbert-base-uncased-emotion")
+
+        comment_body = self.comments["body"]
+        comment_analysis = []
+        for i,comment in enumerate(comment_body):
+            try:
+                result = classifier(comment)
+                res = result[0]["label"]
+            except:
+                res = "Neutral"
+            # print(result[0]["label"],"-----",comment)
+            
+            print(comment)
+            comment_analysis.append(res)
+
+        self.comments["Sentiment"] = comment_analysis
+        self.comments.to_csv("comments-with-sentiment.csv", index=False, encoding="utf-8")
+        print("exported self.comments")
+
+
 
 
     def drawPieChart(self,data):
@@ -117,8 +141,7 @@ class Analytics:
 A = Analytics("Elon Musk")
 # A.generateSentiment()
 # A.mentionsOverTime(start_date="2023-05-01", end_date="2023-08-01") 
-df = pd.read_csv("../vivek_1000_post_sentiment_gathering.csv")
-A.drawPieChart(df["Sentiment"])
-A.wordCloud()
-
-
+df = pd.read_csv("./data/headings-with-sentiment.csv")
+# A.mentionsOverTime()
+# A.drawPieChart(df["Sentiment"])
+# A.wordCloud()

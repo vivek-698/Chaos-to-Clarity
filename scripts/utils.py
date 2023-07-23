@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import pandas as pd
 
 # Function was used to convert the utc format from 1689878167 to Human Readable
 def convertUTCHumanReadable(utc_initial):
@@ -14,5 +14,12 @@ def convertUTCHumanReadable(utc_initial):
     except Exception as e:
         return str(e)
 
+# Below code was used to clean up the date column
+headings = pd.read_csv("./data/headings.csv")
+comments = pd.read_csv("./data/comments.csv")
 
-print(convertUTCHumanReadable(1689878167))
+headings["date"] = headings["created_utc"].apply(convertUTCHumanReadable)
+comments["date"] = comments["created_utc"].apply(convertUTCHumanReadable)
+
+headings.to_csv("headings.csv", index=False, encoding="utf-8")
+comments.to_csv("comments.csv", index=False, encoding="utf-8")

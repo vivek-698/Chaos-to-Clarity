@@ -4,22 +4,25 @@ import torch
 import torch.nn.functional as F
 
 model_name = "cardiffnlp/twitter-roberta-base-sentiment-latest"
-classifier = pipeline("sentiment-analysis", model=model_name)
+classifier = pipeline(model="finiteautomata/bertweet-base-sentiment-analysis")
 
-df = pd.read_csv("headings.csv")
-
+df = pd.read_csv("./data/headings.csv")
 headings = df["title"]
 
 
-tweet_analysis = []
-for text in headings:
+heading_analysis = []
+for i,text in enumerate(headings):
     results = classifier(text)
-    print(text, "\n", results)
-    tweet_analysis.append(results[0]["label"])
+    if results[0]["label"] == "POS":
+        res = "Positive"
+    elif results[0]["label"] == "NEG":
+        res = "Negative"
+    else:
+        res = "Neutral"
+    heading_analysis.append(res)
+    print(i)
 
-print(tweet_analysis)
 
-df["Sentiment"] = tweet_analysis
-df.to_csv("headings-with-sentiment", index=False, encoding="utf-8")
+df["Sentiment"] = heading_analysis
+df.to_csv("headings-with-sentiment.csv", index=False, encoding="utf-8")
 print("Finished exporting")
-print(df.head())

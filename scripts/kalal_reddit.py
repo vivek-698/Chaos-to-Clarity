@@ -16,17 +16,15 @@ attributes = [
     "title",
     "name",
     "score",
-    "likes",
-    "view_count",
     "visited",
     "id",
     "author",
-    "ups",
-    "downs",
     "created_utc",
+    "url",
+    "upvote_ratio"
 ]
 
-comment_attributes = ["body", "ups", "downs", "created_utc"]
+comment_attributes = ["body", "ups", "created_utc", "score"]
 # ['selftext', 'saved',  'title', 'name', 'score','likes', 'view_count','visited', 'id', 'author', 'num_comments']
 with open("headings.csv", "w", newline="", encoding="utf-8") as headings_file, open(
     "comments.csv", "w", newline="", encoding="utf-8"
@@ -35,18 +33,18 @@ with open("headings.csv", "w", newline="", encoding="utf-8") as headings_file, o
     writer1.writerow(attributes)
 
     writer2 = csv.writer(comments_file)
-    writer2.writerow(comment_attributes)
+    writer2.writerow(["parent_post_id"] + comment_attributes)
     for post in top1k_posts:
-        values = [getattr(post, attr) for attr in attributes]
-        writer1.writerow(values)
+        values1 = [getattr(post, attr) for attr in attributes]
+        writer1.writerow(values1)
 
         post.comments.replace_more(limit=50)
-        print(
-            "Fetching ",
-            min(50, len(post.comments.list())),
-            " comments for post titled",
-            post.title,
-        )
+        print("Fetching ", min(50, len(post.comments.list()))," comments for post titled",post.title)
+        print(getattr(post,"id"))
         for comment in post.comments.list():
-            values = [getattr(comment, attr) for attr in comment_attributes]
-            writer2.writerow(values)
+            values2 = [getattr(post,"id")]
+            for attr in comment_attributes:
+                values2.append(getattr(comment,attr))
+
+            # values2 = [getattr(comment, attr) for attr in comment_attributes]
+            writer2.writerow(values2)
