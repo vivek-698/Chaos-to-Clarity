@@ -55,7 +55,8 @@ class Analytics:
         plt.ylabel('Number of Posts')
         plt.title('Number of Mentions Over Time')
         plt.tight_layout()
-        plt.show()
+        plt.savefig(f"./static/mentions-over-time.png")
+        # plt.show()
 
 
     # Read from the self.headings and self.comments and generate sentiment and append it to the datafram NOT the csv
@@ -119,7 +120,9 @@ class Analytics:
         ax.set_title('Sentiment Distribution')
         # Equal aspect ratio ensures that pie is drawn as a circle
         ax.axis('equal')
-        plt.show()
+        plt.savefig(f"./static/3piechart.png")
+        # plt.show()
+        return 
 
     def draw5PieChart(self,data):
         sentiment_counts = data.value_counts()[:-1] # we cut off the last Neutral part as that was generated due to exception while running the sentiment analysis
@@ -131,7 +134,9 @@ class Analytics:
         ax.axis('equal')
         plt.legend(wedges, sentiment_counts.index, title="Sentiments", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
         plt.tight_layout()
-        plt.show()
+        plt.savefig(f"./static/5piechart.png")
+        return 
+        # plt.show()
 
 
     # not working for some reason
@@ -150,11 +155,11 @@ class Analytics:
 
 
 
-A = Analytics("Elon Musk")
+# A = Analytics("Elon Musk")
 # A.mentionsOverTime(start_date="2023-05-01", end_date="2023-08-01") 
-df = pd.read_csv("./data/headings-with-sentiment.csv")
-df2 = pd.read_csv("./data/comments-with-sentiment.csv")
+# df = pd.read_csv("./data/headings-with-sentiment.csv")
+# df2 = pd.read_csv("./data/comments-with-sentiment.csv")
 # A.mentionsOverTime()
 # A.draw3PieChart(df["Sentiment"])
-A.draw5PieChart(df2["Sentiment"])
+# A.draw5PieChart(df2["Sentiment"])
 # A.wordCloud()

@@ -152,10 +152,18 @@ button[type="submit"]:hover {
   transition: 0.2s;
 }
 
+.main .sub-navbar .active {
+  background-color: #cccccc;
+}
+
 .main .sub-navbar li:hover {
   background-color: #cccccc;
 }
 
 .main .sub-navbar a {
   color: #282c34;
+}
+
+.analytics {
+  margin: 20px 20px 20px 260px;
 }
