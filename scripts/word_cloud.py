@@ -3,7 +3,7 @@ from wordcloud import WordCloud
 from wordcloud import STOPWORDS
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("vivek_1000_post_sentiment_gathering.csv")
+df = pd.read_csv("../vivek_1000_post_sentiment_gathering.csv")
 
 # Wordcloud with positive tweets
 positive_tweets = df["Tweet"][df["Sentiment"] == "Positive"]

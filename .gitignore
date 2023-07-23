@@ -1,4 +1,5 @@
 .vscode
+/scripts/__pycache__
 # dependencies
 /node_modules
 /.pnp
