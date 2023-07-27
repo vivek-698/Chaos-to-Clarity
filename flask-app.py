@@ -47,4 +47,5 @@ def word_cloud():
 
 
 if __name__ == '__main__':
+    print("In main")
     app.run()
